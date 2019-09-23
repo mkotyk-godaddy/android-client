@@ -17,6 +17,7 @@ public class SplitClientConfig {
 
     private final String _endpoint;
     private final String _eventsEndpoint;
+    private final boolean _sendIPAddresses;
     private static String _hostname;
     private static String _ip;
 
@@ -80,7 +81,8 @@ public class SplitClientConfig {
                               int eventsQueueSize,
                               int eventsPerPush,
                               long eventFlushInterval,
-                              String trafficType) {
+                              String trafficType,
+                              boolean sendIPAddresses) {
         _endpoint = endpoint;
         _eventsEndpoint = eventsEndpoint;
         _featuresRefreshRate = pollForFeatureChangesEveryNSeconds;
@@ -99,6 +101,7 @@ public class SplitClientConfig {
         _impressionsChunkSize = impressionsChunkSize;
         _hostname = hostname;
         _ip = ip;
+        _sendIPAddresses = sendIPAddresses;
 
         _eventsQueueSize = eventsQueueSize;
         _eventsPerPush = eventsPerPush;
@@ -311,6 +314,8 @@ public class SplitClientConfig {
 
         private String _hostname = "unknown";
         private String _ip = "unknown";
+
+        private boolean _sendIPAddresses = false;
 
         public Builder() {
         }
@@ -591,6 +596,17 @@ public class SplitClientConfig {
             return this;
         }
 
+        /**
+         * Indicates if ip should be sent
+         *
+         * @param sendIPAddresses
+         * @return this builder
+         */
+        public Builder sendIPAddresses(boolean sendIPAddresses) {
+            _sendIPAddresses = sendIPAddresses;
+            return this;
+        }
+
         public SplitClientConfig build() {
             if (_featuresRefreshRate < 30 ) {
                 throw new IllegalArgumentException("featuresRefreshRate must be >= 30: " + _featuresRefreshRate);
@@ -661,7 +677,8 @@ public class SplitClientConfig {
                     _eventsQueueSize,
                     _eventsPerPush,
                     _eventFlushInterval,
-                    _trafficType);
+                    _trafficType,
+                    _sendIPAddresses);
         }
 
         public void set_impressionsChunkSize(long _impressionsChunkSize) {
